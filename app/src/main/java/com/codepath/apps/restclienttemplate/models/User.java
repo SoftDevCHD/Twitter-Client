@@ -14,6 +14,7 @@ public class User {
     public String name;
     public String screenName;
     public String profileImageUrl;
+    public String tvTimestamp;
 
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();
