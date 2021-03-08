@@ -3,11 +3,15 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -20,11 +24,12 @@ import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
-    public static final int MAX_TWEET_LENGTH = 140;
+    public static final int MAX_TWEET_LENGTH = 280;
     public static final String TAG = "ComposeActivity";
 
     EditText etCompose;
     Button btnTweet;
+    TextView tvCount;
 
     Client client;
 
@@ -34,7 +39,7 @@ public class ComposeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compose);
 
         client = TwitterApp.getRestClient(this);
-
+        tvCount = findViewById(R.id.tvCount);
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
 
@@ -79,5 +84,37 @@ public class ComposeActivity extends AppCompatActivity {
             }
         });
         // When button is tapped, make an API call to Twitter to publish the tweet
+
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Count character
+                int c = etCompose.length();
+                // Convert into String
+                String s = String.valueOf(c);
+                // Set to TextView
+                tvCount.setText(s + "/280");
+                if (c > 280) {
+                    tvCount.setTextColor(Color.RED);
+                    btnTweet.setEnabled(false);
+                    btnTweet.setBackgroundColor(Color.GRAY);
+                }
+                else {
+                    tvCount.setTextColor(Color.DKGRAY);
+                    btnTweet.setBackgroundColor(getResources().getColor(R.color.twitterBlue));
+                    btnTweet.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 }
